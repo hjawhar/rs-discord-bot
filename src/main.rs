@@ -1,17 +1,62 @@
 use dotenv::dotenv;
-use std::env;
+use serenity::model::prelude::PresenceUpdateEvent;
+use std::{env, path::Path};
 
 use serenity::{
     async_trait,
+    http::AttachmentType,
     model::{channel::Message, gateway::Ready},
     prelude::*,
 };
 
 struct Handler;
 
-
-async fn handle_ping(ctx: Context, msg: Message){
+async fn handle_ping(ctx: Context, msg: Message) {
     if let Err(why) = msg.channel_id.say(&ctx.http, "Pong!").await {
+        println!("Error sending message: {:?}", why);
+    }
+}
+
+async fn build_message(ctx: Context, msg: Message) {
+    let msg = msg
+        .channel_id
+        .send_message(&ctx.http, |m| {
+            m.content("Hello, World!");
+            m.embed(|e| {
+                e.title("This is a title");
+                e.description("This is a description");
+                e.image("attachment://ferris_eyes.png");
+                e.fields(vec![
+                    ("This is the first field", "This is a field body", true),
+                    (
+                        "This is the second field",
+                        "Both of these fields are inline",
+                        true,
+                    ),
+                ]);
+                e.field(
+                    "This is the third field",
+                    "This is not an inline field",
+                    false,
+                );
+                e.footer(|f| {
+                    f.text("This is a footer");
+
+                    f
+                });
+
+                // Add a timestamp for the current time
+                // This also accepts a rfc3339 Timestamp
+                // e.timestamp(chrono::Utc::now());
+
+                e
+            });
+            m.add_file(AttachmentType::Path(Path::new("./ferris_eyes.png")));
+            m
+        })
+        .await;
+
+    if let Err(why) = msg {
         println!("Error sending message: {:?}", why);
     }
 }
@@ -25,11 +70,9 @@ impl EventHandler for Handler {
     // events can be dispatched simultaneously.
     async fn message(&self, ctx: Context, msg: Message) {
         if msg.content == "!ping" {
-            // Sending a message can fail, due to a network error, an
-            // authentication error, or lack of permissions to post in the
-            // channel, so log to stdout when some error happens, with a
-            // description of it.
-            handle_ping(ctx,msg).await;
+            handle_ping(ctx, msg).await;
+        } else if msg.content == "!halo" {
+            build_message(ctx, msg).await;
         }
     }
 
@@ -41,6 +84,10 @@ impl EventHandler for Handler {
     // In this case, just print what the current user's username is.
     async fn ready(&self, _: Context, ready: Ready) {
         println!("{} is connected!", ready.user.name);
+    }
+
+    async fn presence_update(&self, _ctx: Context, _new_data: PresenceUpdateEvent) {
+        // When a user's status is updated, an event is triggered
     }
 }
 
