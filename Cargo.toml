@@ -8,5 +8,5 @@ edition = "2018"
 [dependencies]
 dotenv = "0.15.0"
 tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
-serenity = { default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
+serenity = { version = "0.10", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
 chrono = "0.4.10"
