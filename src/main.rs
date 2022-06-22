@@ -1,6 +1,6 @@
 mod discord;
 
-use discord::discord::Handler;
+use discord::Handler;
 use dotenv::dotenv;
 use std::env;
 
