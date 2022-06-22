@@ -50,7 +50,7 @@ async fn build_message(ctx: Context, msg: Message) {
 
                 e
             });
-            m.add_file(AttachmentType::Path(Path::new("./ferris_eyes.png")));
+            m.add_file(AttachmentType::Path(Path::new("./assets/images/ferris_eyes.png")));
             m
         })
         .await;
