@@ -1,1 +1,3 @@
-# rust-discord-bot
+# Rust Discord Bot
+
+## A simple discord bot written using rust
