@@ -1,5 +1,5 @@
 [package]
-name = "rust-discord-bot"
+name = "rs-discord-bot"
 version = "0.1.0"
 edition = "2018"
 
@@ -7,6 +7,6 @@ edition = "2018"
 
 [dependencies]
 dotenv = "0.15.0"
-tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.19.2", features = ["full"] }
 serenity = { version = "0.10", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
 chrono = "0.4.10"
