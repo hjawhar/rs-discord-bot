@@ -1,14 +1,25 @@
+mod db;
 mod discord;
 
+use std::env;
+
+use db::connect_db;
 use discord::Handler;
 use dotenv::dotenv;
-use std::env;
 
 use serenity::prelude::*;
 
 #[tokio::main]
 async fn main() {
-    dotenv().ok();
+    dotenv().ok(); 
+    println!("------------------------");
+    let _db = connect_db().await;
+    println!("------------------------");
+    println!("Bot is connecting...");
+    init_discord().await;
+}
+
+async fn init_discord() {
     // Configure the client with your Discord bot token in the environment.
     let token = env::var("DISCORD_TOKEN").expect("Expected a token in the environment");
     // Create a new instance of the Client, logging in as a bot. This will
